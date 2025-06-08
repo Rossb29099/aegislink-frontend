@@ -115,18 +115,19 @@
       cursor: pointer;
     }
 
-    .logo-center {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 5;
-      text-align: center;
-      width: 100%;
-      max-width: 100vw;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
+.logo-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  text-align: center;
+  width: 100%;
+  max-width: 100vw;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
 
     .logo {
       width: 220px;
@@ -137,16 +138,18 @@
       animation: flicker 3s infinite, fadeInLogo 1.4s ease-in-out;
     }
 
-    @keyframes fadeInLogo {
-      from {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
+@keyframes fadeInLogo {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
   </style>
 </head>
 <body>
@@ -164,8 +167,9 @@
   <audio id="typingSound" src="assets/sfx/data-processing.wav" loop></audio>
   <audio id="welcomeAudio" src="assets/sfx/welcome.mp3"></audio>
 
+
   <script>
-    const text = `[ AEGISLINK SYSTEM BOOT SUCCESSFUL ]
+    const text = [ AEGISLINK SYSTEM BOOT SUCCESSFUL ]
 
 > User identity confirmed.
 > Neural sync stabilized.
@@ -177,52 +181,48 @@ Your interface unit is now linked to the CNS-9472 Ardent Valkyrie.
 Ship integrity remains compromised.
 Subsystems are limited. Lockdown protocols remain active.
 
-:: For every action, a consequence ::`;
+:: For every action, a consequence ::;
 
     const container = document.getElementById('consoleText');
     const cursor = document.querySelector('.cursor');
     const typingSound = document.getElementById('typingSound');
-    const welcomeAudio = document.getElementById('welcomeAudio');
     const overlay = document.getElementById('overlay');
 
     let index = 0;
-
+    
+    const welcomeAudio = document.getElementById('welcomeAudio');
+    
     function type() {
       if (index < text.length) {
         container.textContent += text.charAt(index);
         index++;
         setTimeout(type, 20 + Math.random() * 40);
       } else {
-        setTimeout(() => {
-          typingSound.pause();
-          typingSound.currentTime = 0;
+        typingSound.pause();
+        typingSound.currentTime = 0;
 
+        setTimeout(() => {
           document.getElementById('consoleTextWrapper').style.display = 'none';
           cursor.style.display = 'none';
 
           const logoWrapper = document.getElementById('logoWrapper');
           logoWrapper.style.display = 'block';
 
-          setTimeout(() => {
-            welcomeAudio.play().catch(err => {
-              console.log('Audio play failed:', err.message);
-            });
-          }, 200); // slight delay before playing welcome.mp3
-        }, 100); // small buffer after typing
+
+          welcomeAudio.play();
+        }, 4000); // 4s delay after typing ends
       }
     }
 
     function startTyping() {
       overlay.style.display = 'none';
-      typingSound.play().catch(() => {}); // prevent crash if blocked
+      typingSound.play();
       type();
     }
 
     overlay.addEventListener('click', startTyping);
     window.addEventListener('keydown', startTyping);
-    window.addEventListener('touchstart', startTyping); // ensure mobile triggers
   </script>
 
 </body>
 </html>
-
