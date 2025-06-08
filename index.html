@@ -165,6 +165,8 @@
   </div>
 
   <audio id="typingSound" src="assets/sfx/data-processing.wav" loop></audio>
+  <audio id="welcomeAudio" src="assets/sfx/welcome.mp3"></audio>
+
 
   <script>
     const text = `[ AEGISLINK SYSTEM BOOT SUCCESSFUL ]
@@ -204,7 +206,7 @@ Subsystems are limited. Lockdown protocols remain active.
           const logoWrapper = document.getElementById('logoWrapper');
           logoWrapper.style.display = 'block';
 
-          const welcomeAudio = new Audio('assets/sfx/welcome.mp3');
+          const welcomeAudio = document.getElementById('welcomeAudio');
           welcomeAudio.play();
         }, 4000); // 4s delay after typing ends
       }
