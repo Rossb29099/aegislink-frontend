@@ -45,24 +45,24 @@
       z-index: 2;
     }
 
-.container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 800px;
-  padding: 2rem;
-  white-space: pre-wrap;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.5;
-  color: #00ffcc;
-  z-index: 3;
-  animation: flicker 3s infinite;
-  word-break: break-word;
-  hyphens: auto;
-}
-
+    .container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 800px;
+      padding: 2rem;
+      white-space: pre-wrap;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.5;
+      color: #00ffcc;
+      z-index: 3;
+      animation: flicker 3s infinite;
+      word-break: break-word;
+      hyphens: auto;
+      text-align: center;
+    }
 
     @keyframes flicker {
       0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
@@ -114,17 +114,60 @@
       text-align: center;
       cursor: pointer;
     }
+
+.logo-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  text-align: center;
+  width: 100%;
+  max-width: 100vw;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+
+    .logo {
+      width: 220px;
+      max-width: 80vw;
+      height: auto;
+      opacity: 0.95;
+      filter: drop-shadow(0 0 8px #00ffcc);
+      animation: flicker 3s infinite, fadeInLogo 1.4s ease-in-out;
+    }
+
+@keyframes fadeInLogo {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
   </style>
 </head>
 <body>
 
-<div class="overlay" id="overlay">[ INITIATE CONNECTION ]<br><br>Touch screen or press any key to continue.</div>
+  <div class="overlay" id="overlay">[ INITIATE CONNECTION ]<br><br>Touch screen or press any key to continue.</div>
 
-<div class="container" id="consoleText"></div><div class="cursor"></div>
-<audio id="typingSound" src="assets/sfx/data-processing.wav" loop></audio>
+  <div class="container" id="consoleTextWrapper">
+    <div id="consoleText"></div><div class="cursor"></div>
+  </div>
 
-<script>
-  const text = `[ AEGISLINK SYSTEM BOOT SUCCESSFUL ]
+  <div class="logo-center" id="logoWrapper" style="display: none;">
+    <img src="assets/logo.png" alt="AegisLink Logo" class="logo" />
+  </div>
+
+  <audio id="typingSound" src="assets/sfx/data-processing.wav" loop></audio>
+
+  <script>
+    const text = `[ AEGISLINK SYSTEM BOOT SUCCESSFUL ]
 
 > User identity confirmed.
 > Neural sync stabilized.
@@ -138,34 +181,45 @@ Subsystems are limited. Lockdown protocols remain active.
 
 :: For every action, a consequence ::`;
 
-  const container = document.getElementById('consoleText');
-  const cursor = document.querySelector('.cursor');
-  const typingSound = document.getElementById('typingSound');
-  const overlay = document.getElementById('overlay');
+    const container = document.getElementById('consoleText');
+    const cursor = document.querySelector('.cursor');
+    const typingSound = document.getElementById('typingSound');
+    const overlay = document.getElementById('overlay');
 
-  let index = 0;
+    let index = 0;
 
-  function type() {
-    if (index < text.length) {
-      container.textContent += text.charAt(index);
-      index++;
-      setTimeout(type, 20 + Math.random() * 40);
-    } else {
-      // Stop audio once typing ends
-      typingSound.pause();
-      typingSound.currentTime = 0;
+    function type() {
+      if (index < text.length) {
+        container.textContent += text.charAt(index);
+        index++;
+        setTimeout(type, 20 + Math.random() * 40);
+      } else {
+        typingSound.pause();
+        typingSound.currentTime = 0;
+
+        setTimeout(() => {
+          document.getElementById('consoleTextWrapper').style.display = 'none';
+          cursor.style.display = 'none';
+
+          const logoWrapper = document.getElementById('logoWrapper');
+          logoWrapper.style.display = 'block';
+
+          const welcomeAudio = new Audio('assets/sfx/welcome.mp3');
+          welcomeAudio.play();
+        }, 4000); // 4s delay after typing ends
+      }
     }
-  }
 
-  function startTyping() {
-    overlay.style.display = 'none';
-    typingSound.play();
-    type();
-  }
+    function startTyping() {
+      overlay.style.display = 'none';
+      typingSound.play();
+      type();
+    }
 
-  overlay.addEventListener('click', startTyping);
-  window.addEventListener('keydown', startTyping);
-</script>
+    overlay.addEventListener('click', startTyping);
+    window.addEventListener('keydown', startTyping);
+  </script>
 
 </body>
 </html>
+
