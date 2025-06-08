@@ -189,7 +189,9 @@ Subsystems are limited. Lockdown protocols remain active.
     const overlay = document.getElementById('overlay');
 
     let index = 0;
-
+    
+    const welcomeAudio = document.getElementById('welcomeAudio');
+    
     function type() {
       if (index < text.length) {
         container.textContent += text.charAt(index);
@@ -206,7 +208,7 @@ Subsystems are limited. Lockdown protocols remain active.
           const logoWrapper = document.getElementById('logoWrapper');
           logoWrapper.style.display = 'block';
 
-          const welcomeAudio = document.getElementById('welcomeAudio');
+
           welcomeAudio.play();
         }, 4000); // 4s delay after typing ends
       }
