@@ -115,19 +115,18 @@
       cursor: pointer;
     }
 
-.logo-center {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-  text-align: center;
-  width: 100%;
-  max-width: 100vw;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
+    .logo-center {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      text-align: center;
+      width: 100%;
+      max-width: 100vw;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
 
     .logo {
       width: 220px;
@@ -138,18 +137,16 @@
       animation: flicker 3s infinite, fadeInLogo 1.4s ease-in-out;
     }
 
-@keyframes fadeInLogo {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-
+    @keyframes fadeInLogo {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
   </style>
 </head>
 <body>
@@ -166,7 +163,6 @@
 
   <audio id="typingSound" src="assets/sfx/data-processing.wav" loop></audio>
   <audio id="welcomeAudio" src="assets/sfx/welcome.mp3"></audio>
-
 
   <script>
     const text = `[ AEGISLINK SYSTEM BOOT SUCCESSFUL ]
@@ -186,42 +182,45 @@ Subsystems are limited. Lockdown protocols remain active.
     const container = document.getElementById('consoleText');
     const cursor = document.querySelector('.cursor');
     const typingSound = document.getElementById('typingSound');
+    const welcomeAudio = document.getElementById('welcomeAudio');
     const overlay = document.getElementById('overlay');
 
     let index = 0;
-    
-    const welcomeAudio = document.getElementById('welcomeAudio');
-    
+
     function type() {
       if (index < text.length) {
         container.textContent += text.charAt(index);
         index++;
         setTimeout(type, 20 + Math.random() * 40);
       } else {
-        typingSound.pause();
-        typingSound.currentTime = 0;
-
         setTimeout(() => {
+          typingSound.pause();
+          typingSound.currentTime = 0;
+
           document.getElementById('consoleTextWrapper').style.display = 'none';
           cursor.style.display = 'none';
 
           const logoWrapper = document.getElementById('logoWrapper');
           logoWrapper.style.display = 'block';
 
-
-          welcomeAudio.play();
-        }, 4000); // 4s delay after typing ends
+          setTimeout(() => {
+            welcomeAudio.play().catch(err => {
+              console.log('Audio play failed:', err.message);
+            });
+          }, 200); // slight delay before playing welcome.mp3
+        }, 100); // small buffer after typing
       }
     }
 
     function startTyping() {
       overlay.style.display = 'none';
-      typingSound.play();
+      typingSound.play().catch(() => {}); // prevent crash if blocked
       type();
     }
 
     overlay.addEventListener('click', startTyping);
     window.addEventListener('keydown', startTyping);
+    window.addEventListener('touchstart', startTyping); // ensure mobile triggers
   </script>
 
 </body>
